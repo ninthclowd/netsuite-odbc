@@ -9,15 +9,17 @@ import (
 )
 
 func TestNewTBAConnectionStringer(t *testing.T) {
-	cfg := &TokenConfig{}
-	got := NewTBAConnectionStringer("DSN=NetSuite", cfg)
+	cfg := Config{
+		ConnectionString: "DSN=NetSuite;",
+	}
+	got := NewConnectionStringer(cfg)
 
 	if got.err != nil {
-		t.Errorf("expected no error on TBAConnectionStringer, got: %s", got.err)
+		t.Errorf("expected no error on ConnectionStringer, got: %s", got.err)
 	}
 
 	if got.config != cfg {
-		t.Errorf("config not set on TBAConnectionStringer")
+		t.Errorf("config not set on ConnectionStringer")
 	}
 
 	if dsn, ok := got.params["DSN"]; !ok || dsn != "NetSuite" {
@@ -30,12 +32,12 @@ func TestNewTBAConnectionStringer(t *testing.T) {
 
 }
 
-func newTestTBA() *TBAConnectionStringer {
-	return &TBAConnectionStringer{
+func newTestTBA() *ConnectionStringer {
+	return &ConnectionStringer{
 		params: map[string]string{
 			"DSN": "NetSuite",
 		},
-		config: &TokenConfig{
+		config: Config{
 			ConsumerKey:    "71cc02b731f05895561ef0862d71553a3ac99498a947c3b7beaf4a1e4a29f7c4",
 			ConsumerSecret: "7278da58caf07f5c336301a601203d10a58e948efa280f0618e25fcee1ef2abd",
 			TokenID:        "89e08d9767c5ac85b374415725567d05b54ecf0960ad2470894a52f741020d82",

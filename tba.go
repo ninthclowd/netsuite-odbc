@@ -12,28 +12,29 @@ import (
 
 const nonceLength = 15
 
-// NewTBAConnectionStringer implements unixodbc.ConnectionStringFactory, generating connection strings for connecting
-// to a NetSuite ODBC database
-func NewTBAConnectionStringer(connStr string, config *TokenConfig) *TBAConnectionStringer {
-	t := &TBAConnectionStringer{
+// NewConnectionStringer creates a new ConnectionStringer used for connecting to a NetSuite ODBC database with TBA
+func NewConnectionStringer(config Config) *ConnectionStringer {
+	t := &ConnectionStringer{
 		config:    config,
 		now:       time.Now,
 		randBytes: rand.Reader,
 	}
-	t.params, t.err = connStringToParameterMap(connStr)
+	t.params, t.err = connStringToParameterMap(config.ConnectionString)
 	return t
 }
 
-type TBAConnectionStringer struct {
+// ConnectionStringer implements unixodbc.ConnectionStringFactory, generating connection strings for connecting
+// to a NetSuite ODBC database
+type ConnectionStringer struct {
 	err       error
-	config    *TokenConfig
+	config    Config
 	params    parameterMap
 	now       func() time.Time
 	randBytes io.Reader
 }
 
 // ConnectionString generates a connection string with a dynamic token used for credentials
-func (s *TBAConnectionStringer) ConnectionString() (string, error) {
+func (s *ConnectionStringer) ConnectionString() (string, error) {
 	if s.err != nil {
 		return "", s.err
 	}
@@ -46,7 +47,7 @@ func (s *TBAConnectionStringer) ConnectionString() (string, error) {
 	return s.params.String(), nil
 }
 
-func (s *TBAConnectionStringer) Nonce() (string, error) {
+func (s *ConnectionStringer) Nonce() (string, error) {
 	b := make([]byte, nonceLength)
 	if _, err := io.ReadFull(s.randBytes, b); err != nil {
 		return "", err
@@ -55,7 +56,7 @@ func (s *TBAConnectionStringer) Nonce() (string, error) {
 	}
 }
 
-func (s *TBAConnectionStringer) Token() (string, error) {
+func (s *ConnectionStringer) Token() (string, error) {
 	nonce, err := s.Nonce()
 	if err != nil {
 		return "", err
