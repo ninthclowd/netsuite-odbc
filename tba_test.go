@@ -40,7 +40,7 @@ func newTestTBA() *ConnectionStringer {
 		config: Config{
 			ConsumerKey:    "71cc02b731f05895561ef0862d71553a3ac99498a947c3b7beaf4a1e4a29f7c4",
 			ConsumerSecret: "7278da58caf07f5c336301a601203d10a58e948efa280f0618e25fcee1ef2abd",
-			TokenID:        "89e08d9767c5ac85b374415725567d05b54ecf0960ad2470894a52f741020d82",
+			TokenId:        "89e08d9767c5ac85b374415725567d05b54ecf0960ad2470894a52f741020d82",
 			TokenSecret:    "060cd9ab3ffbbe1e3d3918e90165ffd37ab12acc76b4691046e2d29c7d7674c2",
 			AccountId:      "1234567",
 		},

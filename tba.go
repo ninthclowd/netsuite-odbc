@@ -65,7 +65,7 @@ func (s *ConnectionStringer) Token() (string, error) {
 	base := fmt.Sprintf("%s&%s&%s&%s&%d",
 		s.config.AccountId,
 		s.config.ConsumerKey,
-		s.config.TokenID,
+		s.config.TokenId,
 		nonce,
 		s.now().Unix())
 	secret := []byte(s.config.ConsumerSecret + "&" + s.config.TokenSecret)

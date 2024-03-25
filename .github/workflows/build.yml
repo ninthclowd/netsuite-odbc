@@ -1,4 +1,4 @@
-name: Go
+name: Build
 on: [push]
 jobs:
   build:
@@ -21,4 +21,6 @@ jobs:
       - name: Test
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: go test -v .
+        run: go test -v -coverprofile=coverage.out -covermode=atomic .
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
