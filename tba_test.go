@@ -1,6 +1,7 @@
 package netsuiteodbc
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"strings"
@@ -64,7 +65,7 @@ func TestTBAConnectionStringer_Nonce(t *testing.T) {
 
 func TestTBAConnectionStringer_ConnectionString(t *testing.T) {
 	auth := newTestTBA()
-	c, err := auth.ConnectionString()
+	c, err := auth.ConnectionString(context.Background())
 	if err != nil {
 		t.Fatalf("expected no error from ConnectionString, got: %s", err.Error())
 	}

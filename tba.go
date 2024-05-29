@@ -1,6 +1,7 @@
 package netsuiteodbc
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
@@ -34,7 +35,7 @@ type ConnectionStringer struct {
 }
 
 // ConnectionString generates a connection string with a dynamic token used for credentials
-func (s *ConnectionStringer) ConnectionString() (string, error) {
+func (s *ConnectionStringer) ConnectionString(ctx context.Context) (string, error) {
 	if s.err != nil {
 		return "", s.err
 	}
