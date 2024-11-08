@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"sync"
 	"time"
 )
 
@@ -32,6 +33,8 @@ type ConnectionStringer struct {
 	params    parameterMap
 	now       func() time.Time
 	randBytes io.Reader
+
+	mu sync.Mutex
 }
 
 // ConnectionString generates a connection string with a dynamic token used for credentials
@@ -43,12 +46,19 @@ func (s *ConnectionStringer) ConnectionString(ctx context.Context) (string, erro
 	if err != nil {
 		return "", err
 	}
-	s.params["UID"] = "TBA"
-	s.params["PWD"] = token
-	return s.params.String(), nil
+	params := parameterMap{
+		"UID": "TBA",
+		"PWD": token,
+	}
+	for k, v := range s.params {
+		params[k] = v
+	}
+	return params.String(), nil
 }
 
 func (s *ConnectionStringer) Nonce() (string, error) {
+	s.mu.Lock() // lock to prevent concurrent access to rand.Reader
+	defer s.mu.Unlock()
 	b := make([]byte, nonceLength)
 	if _, err := io.ReadFull(s.randBytes, b); err != nil {
 		return "", err
